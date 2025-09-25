@@ -17,18 +17,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        FXMLLoader loaded = new FXMLLoader(getClass().getResource("/fxml/visualizarCliente.fxml"));
+        Scene scene = new Scene(loaded.load());
+        var archivoCSS = getClass().getResource("/css/estilo.css");
+        scene.getStylesheets().add(archivoCSS.toExternalForm());
+
+        stage.setTitle("TableView25092025");
         stage.setScene(scene);
         stage.show();
-    }
-
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
     }
 
     public static void main(String[] args) {
