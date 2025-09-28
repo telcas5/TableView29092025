@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="294.0" minWidth="490.0" prefHeight="340.0" prefWidth="428.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="294.0" minWidth="490.0" prefHeight="340.0" prefWidth="428.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.telmocas.controladores.VisualizarCliente">
    <children>
       <GridPane>
         <columnConstraints>

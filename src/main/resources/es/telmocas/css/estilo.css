@@ -1,0 +1,17 @@
+/* Estilo del borde azul exterior */
+.borde{
+    -fx-border-color: blue;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+/* Estilo para los botones */
+.botones{
+    -fx-font-size: 13px;
+}
+
+/* Estio para los Labels */
+.labels{
+    -fx-font-size: 13px;
+}
