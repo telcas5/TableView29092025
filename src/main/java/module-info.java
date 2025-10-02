@@ -1,17 +1,14 @@
 module es.telmocas {
-    // Dependencias de JavaFX
     requires javafx.controls;
     requires javafx.fxml;
-
-    // Para usar logging con java.util.logging o SLF4J (si lo llegas a integrar)
-    requires java.logging;
     requires org.slf4j;
+    requires jdk.compiler;
+    requires java.desktop;
+    requires java.logging;
 
-    // Permite que JavaFX acceda a las clases del paquete indicado
-    opens es.telmocas to javafx.fxml;
+    opens es.telmocas.controladores to javafx.fxml;
     opens es.telmocas.modelos to javafx.base;
 
-    // Exporta los paquetes principales para que puedan usarse desde fuera del módulo
+    opens es.telmocas to javafx.fxml;
     exports es.telmocas;
-    exports es.telmocas.modelos;
 }

@@ -60,7 +60,7 @@ public class App extends Application {
 
             // Cargar el archivo FXML de la interfaz
             FXMLLoader loader = new FXMLLoader(
-                    Objects.requireNonNull(getClass().getResource("/fxml/visualizarCliente.fxml"),
+                    Objects.requireNonNull(getClass().getResource("fxml/visualizarCliente.fxml"),
                             "No se encontró el archivo FXML")
             );
 
