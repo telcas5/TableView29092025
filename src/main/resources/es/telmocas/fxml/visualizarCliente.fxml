@@ -38,12 +38,12 @@
             <Button fx:id="btnEliminar" mnemonicParsing="false" text="Eliminar Filas Seleccionadas" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <TableView prefHeight="203.0" prefWidth="153.0">
+      <TableView fx:id="tableView" prefHeight="203.0" prefWidth="153.0">
         <columns>
-          <TableColumn prefWidth="75.0" resizable="false" text="Id" />
-          <TableColumn prefWidth="75.0" resizable="false" text="Nombre" />
-            <TableColumn prefWidth="75.0" resizable="false" text="Apellido" />
-            <TableColumn prefWidth="154.0" resizable="false" text="Fecha de Nacimiento" />
+          <TableColumn fx:id="colId" prefWidth="75.0" resizable="false" text="Id"  />
+          <TableColumn fx:id="colNombre" prefWidth="75.0" resizable="false" text="Nombre" />
+            <TableColumn fx:id="colApellido" prefWidth="75.0" resizable="false" text="Apellido" />
+            <TableColumn fx:id="colCumpleanos" prefWidth="154.0" resizable="false" text="Cumpleanos" />
         </columns>
       </TableView>
    </children>

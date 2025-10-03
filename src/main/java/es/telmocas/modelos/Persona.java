@@ -21,6 +21,11 @@ public class Persona {
      */
     private final int id;
 
+    /* ATOMICINTEGER */
+
+
+
+
     /**
      * Nombre de la persona.
      */
