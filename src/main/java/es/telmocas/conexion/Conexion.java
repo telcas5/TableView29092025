@@ -21,18 +21,7 @@ public class Conexion {
             conexion = DriverManager.getConnection(URL, USER, PASSWORD);
         }
         return conexion;
-    }
 
-    /**
-     * Método para cerrar la conexión.
-     */
-    public static void cerrarConexion() {
-        if (conexion != null) {
-            try {
-                conexion.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
+}
 }

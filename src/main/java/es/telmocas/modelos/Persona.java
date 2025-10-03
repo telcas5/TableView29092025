@@ -1,7 +1,5 @@
 package es.telmocas.modelos;
 
-import javafx.beans.property.Property;
-
 import java.time.LocalDate;
 
 /**
@@ -57,16 +55,6 @@ public class Persona {
     }
 
     /**
-     * Constructor por defecto de la clase Persona.
-     * <p>
-     * Inicializa los campos con valores por defecto (0, cadena vacía o null).
-     * </p>
-     */
-    public Persona() {
-        this(0, "", "", null);
-    }
-
-    /**
      * Obtiene el identificador de la persona.
      *
      * @return id de la persona.
@@ -89,7 +77,7 @@ public class Persona {
      *
      * @return apellidos de la persona.
      */
-    public String getApellidos() {
+    public String getApellido() {
         return apellidos;
     }
 

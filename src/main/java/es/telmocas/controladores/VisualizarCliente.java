@@ -1,140 +1,87 @@
 package es.telmocas.controladores;
 
+import es.telmocas.dao.ClienteDAO;
 import es.telmocas.modelos.Persona;
-import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Controlador de la vista "VisualizarCliente.fxml".
- * Gestiona la interacción con la tabla y los formularios para añadir, eliminar o restaurar personas.
+ * Controlador de la vista VisualizarCliente.fxml.
  *
- * @author Telmo Castillo
- * @version 1.0
+ * Este controlador gestiona la interacción entre la interfaz gráfica (JavaFX) y la base de datos
+ * para la entidad Persona. Permite:
+ *  - Visualizar clientes almacenados en la base de datos
+ *  - Añadir nuevos clientes mediante un formulario
+ *  - Eliminar clientes seleccionados de la tabla y de la base de datos
+ *  - Refrescar/restaurar la tabla para mantenerla sincronizada con la base de datos
+ *
+ * Autor: Telmo Castillo
+ * Versión: 1.0
  */
 public class VisualizarCliente {
 
     private static final Logger logger = Logger.getLogger(VisualizarCliente.class.getName());
 
-    @FXML
-    private TextField txtNombre;
-
-    @FXML
-    private TextField txtApellido;
-
-    @FXML
-    private DatePicker dateNacimiento;
-
-    @FXML
-    private Button btnAniadir;
-
-    @FXML
-    private Button btnEliminar;
-
-    @FXML
-    private Button btnRestaurar;
-
-    @FXML
-    private TableView<Persona> tableView;
-
-    @FXML
-    private TableColumn<Persona, Integer> colId;
-
-    @FXML
-    private TableColumn<Persona, String> colNombre;
-
-    @FXML
-    private TableColumn<Persona, String> colApellido;
-
-    @FXML
-    private TableColumn<Persona, LocalDate> colCumpleanos;
-
-    // Lista observable de personas
-    private ObservableList<Persona> personas = FXCollections.observableArrayList();
-
-    // Lista original para restaurar
-    private final List<Persona> backupPersonas = new ArrayList<>();
-
-    private int idCounter = 1;
+    // Componentes FXML
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtApellido;
+    @FXML private DatePicker dateNacimiento;
+    @FXML private Button btnAniadir;
+    @FXML private Button btnEliminar;
+    @FXML private Button btnRestaurar;
+    @FXML private TableView<Persona> tableView;
+    @FXML private TableColumn<Persona, Integer> colId;
+    @FXML private TableColumn<Persona, String> colNombre;
+    @FXML private TableColumn<Persona, String> colApellido;
+    @FXML private TableColumn<Persona, LocalDate> colCumpleanos;
 
     /**
-     * Metodo de inicialización del controlador.
-     * Configura la tabla y los eventos de los botones.
+     * Lista observable que mantiene los clientes mostrados en la tabla.
      */
+    private ObservableList<Persona> personas = FXCollections.observableArrayList();
 
-    @FXML
-    void btnEliminar(ActionEvent event) {
-        ObservableList<Persona> seleccionadas = tableView.getSelectionModel().getSelectedItems();
+    /**
+     * Objeto DAO responsable de las operaciones en la base de datos.
+     */
+    private final ClienteDAO clienteDAO = new ClienteDAO();
 
-        if (seleccionadas.isEmpty()) {
-            showAlert("Atención", "No hay filas seleccionadas para eliminar");
-            return;
-        }
-
-        // Eliminar las filas seleccionadas
-        personas.removeAll(seleccionadas);
-        logger.info("Filas eliminadas: " + seleccionadas.size());
-    }
-
-    @FXML
-    void menuAyuda(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Ayuda");
-        alert.setHeaderText("Información");
-        alert.setContentText("Versión: 1.0\nCreado por: Telmo Castillo");
-        alert.showAndWait();
-    }
-
-    @FXML
-    void menuCerrar(ActionEvent event) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Cerrar aplicación");
-        confirm.setHeaderText(null);
-        confirm.setContentText("¿Estás seguro que quieres cerrar la aplicación?");
-
-        // Mostrar diálogo y esperar respuesta
-        var result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Cerrar la ventana principal
-            // Obtenemos la ventana desde un nodo cualquiera, por ejemplo el tableView
-            tableView.getScene().getWindow().hide();
-        }
-        // Si cancela, no hacemos nada (el diálogo se cierra automáticamente)
-    }
-
-
-
+    /**
+     * Inicializa el controlador al cargar la vista FXML.
+     * Configura las columnas de la tabla, carga los datos de la base de datos
+     * y asigna las acciones a los botones.
+     */
     @FXML
     public void initialize() {
         logger.info("Inicializando controlador VisualizarCliente");
 
-        // Configurar columnas de la tabla
+        // Configuración de columnas
         colId.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getId()).asObject()
         );
-        colNombre.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getNombre()));
-        colApellido.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getApellidos()));
-        colCumpleanos.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getCumpleanos()));
+        colNombre.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getNombre()));
+        colApellido.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getApellido()));
+        colCumpleanos.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getCumpleanos()));
 
-        // Asignar la lista observable a la tabla
-        tableView.setItems(personas);
+        // Cargar datos
+        refrescarTabla();
 
-        // Configurar botones
+        // Acciones de botones
         btnAniadir.setOnAction(e -> aniadirPersona());
-        btnEliminar.setOnAction(e -> eliminarFilas());
-        btnRestaurar.setOnAction(e -> restaurarTabla());
+        btnEliminar.setOnAction(e -> eliminarPersona());
+        btnRestaurar.setOnAction(e -> refrescarTabla());
     }
 
     /**
-     * Añade una nueva persona a la tabla.
+     * Añade una nueva persona a la base de datos y actualiza la tabla.
+     * Valida que los campos no estén vacíos.
      */
     private void aniadirPersona() {
         String nombre = txtNombre.getText().trim();
@@ -146,46 +93,50 @@ public class VisualizarCliente {
             return;
         }
 
-        Persona persona = new Persona(idCounter++, nombre, apellido, fecha);
-        personas.add(persona);
-        backupPersonas.add(persona);
+        Persona persona = new Persona(0, nombre, apellido, fecha);
+        clienteDAO.insertarCliente(persona);
 
-        // Limpiar campos
+        refrescarTabla();
+
         txtNombre.clear();
         txtApellido.clear();
         dateNacimiento.setValue(null);
 
-        logger.info("Persona añadida: " + persona);
+        logger.info("Cliente añadido: " + persona);
     }
 
     /**
-     * Elimina las filas seleccionadas de la tabla.
+     * Elimina el cliente seleccionado en la tabla de la base de datos.
+     * Si no hay ninguno seleccionado, muestra una alerta.
      */
-    private void eliminarFilas() {
-        ObservableList<Persona> seleccionadas = tableView.getSelectionModel().getSelectedItems();
+    private void eliminarPersona() {
+        Persona seleccionada = tableView.getSelectionModel().getSelectedItem();
 
-        if (seleccionadas.isEmpty()) {
-            showAlert("Atención", "No hay filas seleccionadas para eliminar");
+        if (seleccionada == null) {
+            showAlert("Atención", "Debe seleccionar un cliente para eliminar");
             return;
         }
 
-        personas.removeAll(seleccionadas);
-        logger.info("Filas eliminadas: " + seleccionadas.size());
+        clienteDAO.eliminarCliente(seleccionada.getId());
+        refrescarTabla();
+
+        logger.info("Cliente eliminado: " + seleccionada);
     }
 
     /**
-     * Restaura la tabla a su estado original.
+     * Refresca la tabla con los datos actuales de la base de datos.
      */
-    private void restaurarTabla() {
-        personas.setAll(backupPersonas);
-        logger.info("Tabla restaurada al estado original");
+    private void refrescarTabla() {
+        personas.setAll(clienteDAO.obtenerTodos());
+        tableView.setItems(personas);
+        logger.info("Tabla actualizada desde la base de datos");
     }
 
     /**
-     * Muestra un mensaje de alerta.
+     * Muestra una alerta informativa.
      *
-     * @param titulo   Título de la alerta
-     * @param mensaje  Contenido de la alerta
+     * @param titulo   título de la alerta
+     * @param mensaje  contenido de la alerta
      */
     private void showAlert(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -193,5 +144,33 @@ public class VisualizarCliente {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    /**
+     * Muestra información de ayuda sobre la aplicación.
+     */
+    @FXML
+    void menuAyuda() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Ayuda");
+        alert.setHeaderText("Información");
+        alert.setContentText("Versión: 1.0\nCreado por: Telmo Castillo");
+        alert.showAndWait();
+    }
+
+    /**
+     * Pregunta al usuario si desea cerrar la aplicación y la cierra si acepta.
+     */
+    @FXML
+    void menuCerrar() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Cerrar aplicación");
+        confirm.setHeaderText(null);
+        confirm.setContentText("¿Estás seguro que quieres cerrar la aplicación?");
+
+        var result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            tableView.getScene().getWindow().hide();
+        }
     }
 }
