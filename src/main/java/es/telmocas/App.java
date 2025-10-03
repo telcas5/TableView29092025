@@ -41,7 +41,7 @@ public class App extends Application {
     private static Scene scene;
 
     /**
-     * Método principal de inicio de la aplicación JavaFX.
+     * Metodo principal de inicio de la aplicación JavaFX.
      * <p>
      * Se encarga de:
      * <ul>
