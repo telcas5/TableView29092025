@@ -37,13 +37,12 @@ public class App extends Application {
     /** Logger para registrar información, advertencias y errores. */
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-    /** Escena principal de la aplicación. */
-    private static Scene scene;
-
     /**
      * Metodo principal de inicio de la aplicación JavaFX.
      * <p>
      * Se encarga de:
+     *
+     *
      * <ul>
      *     <li>Cargar el archivo FXML que define la interfaz gráfica.</li>
      *     <li>Aplicar el archivo CSS de estilos (si existe).</li>
@@ -64,14 +63,15 @@ public class App extends Application {
                             "No se encontró el archivo FXML")
             );
 
-            scene = new Scene(loader.load());
+            /* Escena principal de la aplicación. */
+            Scene scene = new Scene(loader.load());
             logger.info("Archivo FXML cargado correctamente.");
 
             // Cargar y aplicar el archivo CSS si está disponible
             URL archivoCSS = getClass().getResource("/css/estilo.css");
             if (archivoCSS != null) {
                 scene.getStylesheets().add(archivoCSS.toExternalForm());
-                logger.info("Estilo CSS aplicado desde: " + archivoCSS);
+                logger.info("Estilo CSS aplicado desde: {}", archivoCSS);
             } else {
                 logger.warn("No se encontró el archivo CSS, se usará el estilo por defecto.");
             }
@@ -90,14 +90,14 @@ public class App extends Application {
     }
 
     /**
-     * Método de entrada principal.
+     * Metodo de entrada principal.
      * <p>
      * Lanza la aplicación JavaFX inicializando la interfaz.
      * </p>
      *
-     * @param args argumentos de línea de comandos (no utilizados).
+     * @param ignoredArgs argumentos de línea de comandos (no utilizados).
      */
-    public static void main(String[] args) {
+    public static void main(String[] ignoredArgs) {
         logger.info("Lanzando aplicación JavaFX...");
         launch();
     }

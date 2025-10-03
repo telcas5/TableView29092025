@@ -4,6 +4,7 @@ import es.telmocas.modelos.Persona;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -60,14 +61,57 @@ public class VisualizarCliente {
     private ObservableList<Persona> personas = FXCollections.observableArrayList();
 
     // Lista original para restaurar
-    private List<Persona> backupPersonas = new ArrayList<>();
+    private final List<Persona> backupPersonas = new ArrayList<>();
 
     private int idCounter = 1;
 
     /**
-     * Método de inicialización del controlador.
+     * Metodo de inicialización del controlador.
      * Configura la tabla y los eventos de los botones.
      */
+
+    @FXML
+    void btnEliminar(ActionEvent event) {
+        ObservableList<Persona> seleccionadas = tableView.getSelectionModel().getSelectedItems();
+
+        if (seleccionadas.isEmpty()) {
+            showAlert("Atención", "No hay filas seleccionadas para eliminar");
+            return;
+        }
+
+        // Eliminar las filas seleccionadas
+        personas.removeAll(seleccionadas);
+        logger.info("Filas eliminadas: " + seleccionadas.size());
+    }
+
+    @FXML
+    void menuAyuda(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Ayuda");
+        alert.setHeaderText("Información");
+        alert.setContentText("Versión: 1.0\nCreado por: Telmo Castillo");
+        alert.showAndWait();
+    }
+
+    @FXML
+    void menuCerrar(ActionEvent event) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Cerrar aplicación");
+        confirm.setHeaderText(null);
+        confirm.setContentText("¿Estás seguro que quieres cerrar la aplicación?");
+
+        // Mostrar diálogo y esperar respuesta
+        var result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Cerrar la ventana principal
+            // Obtenemos la ventana desde un nodo cualquiera, por ejemplo el tableView
+            tableView.getScene().getWindow().hide();
+        }
+        // Si cancela, no hacemos nada (el diálogo se cierra automáticamente)
+    }
+
+
+
     @FXML
     public void initialize() {
         logger.info("Inicializando controlador VisualizarCliente");
