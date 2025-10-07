@@ -4,6 +4,7 @@ import es.telmocas.dao.ClienteDAO;
 import es.telmocas.modelos.Persona;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -173,4 +174,11 @@ public class VisualizarCliente {
             tableView.getScene().getWindow().hide();
         }
     }
+
+    @FXML
+    private void btnEliminar(ActionEvent event) {
+        eliminarPersona();
+    }
+
+
 }

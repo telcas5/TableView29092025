@@ -3,6 +3,7 @@ package es.telmocas.dao;
 import es.telmocas.conexion.Conexion;
 import es.telmocas.modelos.Persona;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
