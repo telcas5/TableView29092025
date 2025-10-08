@@ -5,6 +5,7 @@ module es.telmocas {
     requires jdk.compiler;
     requires java.desktop;
     requires java.logging;
+    requires java.sql;
 
     opens es.telmocas.controladores to javafx.fxml;
     opens es.telmocas.modelos to javafx.base;
